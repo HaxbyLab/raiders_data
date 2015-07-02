@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Split input video files into jpeg's (of smaller size) at 100ms sampling
+# for comparison operations
+
+set -eu
+
+ips=10  # images per second
+res=240x135
+
+for f in "$@"; do  
+   d=${f%.*}-${res}_${ips}ips; 
+   [ -e $d ] || { mkdir $d; avconv -i $f -s $res -r $ips -vsync 1 -an -y $d/%06d.jpeg ; }
+done
