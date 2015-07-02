@@ -28,27 +28,38 @@
 #--start-at duration:8 \
 #--stop-at duration:20 \
 
+set -eu
+
+CMD=eval
+#CMD=echo # for debugging
 # To create a single long file to later figure out original split points
 
-# arguments as produced by match_images.py
+part=0
+# arguments (start, end) as produced by match_images.py
 echo "\
---start-at duration:8.24357 --stop-at duration:849.24357
---start-at duration:829.05248 --stop-at duration:1690.05248
---start-at duration:1669.9 --stop-at duration:2530.9
---start-at duration:2510.73725 --stop-at duration:3324.73725
---start-at duration:3304.5269 --stop-at duration:4152.5269
---start-at duration:4132.4 --stop-at duration:4993.4
---start-at duration:4973.20054 --stop-at duration:5834.20054
---start-at duration:5813.80204 --stop-at duration:6664.80204" \
-| while read opts; do
-    echo HandBrakeCLI -i /dev/sr0 \
-                 -o INDIANA_JONES_RAIDERS_LOST_ARK.m4v \
+8.24357   849.24357
+829.05248 1690.05248
+1669.9    2530.9
+2510.7372 3324.73725
+3304.5269 4152.5269
+4132.4    4993.4
+4973.2005 5834.20054
+5813.8020 6664.80204" \
+| while read start end; do
+      part=$(($part+1))
+	  [ "${start:0:1}" != "#" ] || continue #  skip commented out
+	  # we apparently need a duration, not 'end'
+	  duration=$(python -c "print(round($end-$start, 2))")
+      $CMD HandBrakeCLI -i /dev/sr0 \
+                 -o INDIANA_JONES_RAIDERS_LOST_ARK_part${part}.m4v \
                  -w 960 -l 540 \
                  --rate 29.97 -e x264 -b 3690 \
                  -d  \
                  --nlmeans \
                  -R 44.1 -ab 125440 \
-                 $opts
+                 --start-at duration:$start --stop-at duration:$duration
+
+#	break # XXX
 done
 
 # for f in ../*/INDIANA_JONES_RAIDERS_LOST_ARK_part_1.m4v INDIANA_JONES_RAIDERS_LOST_ARK.m4v; do mplayer -vo null -ao null -identify -frames 0 $f >| $(basename $f).info; done
