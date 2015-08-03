@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Split input video files into jpeg's at original frame rate (29.97) and at height
+# 121, and width 182, which would match original proportions of original DVD (720x480)
+
+set -eu
+
+res=182x121
+
+for f in "$@"; do  
+   d=${f%.*}-${res}; 
+   [ -e $d ] || { mkdir $d; avconv -i $f -s $res  -vsync 1 -an -y $d/%06d.jpeg ; }
+done
