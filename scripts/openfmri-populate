@@ -126,7 +126,8 @@ done
 # some masks common across all the subjects
 mkdir -p $ofmridir/masks/BOLD
 # originates from protected /home/swaroop/mvpa_linux_bkup/raiders_dartmouth/mask_stuff/MNI_mask_vt.nii.gz
-_cp /tmp/MNI_mask_vt.nii.gz $ofmridir/masks/BOLD/vt${prepcode}_mni.nii.gz
+# DONE _cp /tmp/MNI_mask_vt.nii.gz $ofmridir/masks/BOLD/vt${prepcode}_mni.nii.gz
+_cp /data/movies/raiders/dartmouth/preprocessed/MNI_mask_cerebrum.nii.gz $ofmridir/masks/BOLD/cerebrum${prepcode}_mni.nii.gz
 
 # And now dump some hyperaligned data
 mkdir -p $ofmridir/aligned/BOLD
