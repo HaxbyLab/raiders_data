@@ -129,6 +129,7 @@ mkdir -p $ofmridir/masks/BOLD
 # DONE _cp /tmp/MNI_mask_vt.nii.gz $ofmridir/masks/BOLD/vt${prepcode}_mni.nii.gz
 _cp /data/movies/raiders/dartmouth/preprocessed/MNI_mask_cerebrum.nii.gz $ofmridir/masks/BOLD/cerebrum${prepcode}_mni.nii.gz
 _cp /data/movies/raiders/dartmouth/preprocessed/MNI_mask_gray_large.nii.gz $ofmridir/masks/BOLD/gray_large${prepcode}_mni.nii.gz
+_cp /home/swaroop/mvpa_linux_bkup/music/subjects/MNI152_3mm_AC.nii.gz $ofmridir/masks/BOLD/ac${prepcode}_mni.nii.gz
 
 # And now dump some hyperaligned data
 mkdir -p $ofmridir/aligned/BOLD
