@@ -56,12 +56,15 @@ _cp() {
         [ -e $f ] || { echo "File $f not found"; exit 1; }
     done
     if [ ! -e "$tfile" ]; then
+		#echo "TRyING TO copy into $tfile: $@"
+		#exit 1
         $CMD cp -a --reflink=auto "$@"
     fi
 }
 
 topdir=/data/movies/raiders/dartmouth
-ofmridir=/data/movies/raiders/yoh-annex/data-private
+ofmridir=..
+#/data/movies/raiders/yoh-annex/data-private
 subjects=$topdir
 
 _info "Output under $ofmridir"
@@ -88,12 +91,41 @@ while read isubj subjcode ; do
 	# BOLD images
     # orig bold was in PAR/REC
     origboldparrec=$(/bin/ls $subjpath/orig/*FEEPI*.PAR | sed -e 's,\.PAR$,,g' | sort -n)
-    echo "Orig par: $origboldparrec"
+    origanatparrec=$(/bin/ls $subjpath/orig/*T1TFE*.PAR | sed -e 's,\.PAR$,,g' | sort -n)
+    echo "Orig bold par: $origboldparrec"
+    echo "Orig anat par: $origanatparrec"
+
     nruns=$(echo "$origboldparrec" | wc -l)
+	nanat=$(echo "$origanatparrec" | wc -l)
+
     if [ $nruns != 8 ]; then
         echo "E: must have 8 runs"
         exit 1
     fi
+    if [ $nanat != 4 ]; then
+		# 2 scanning sessions thus 2 scouts + anat
+        echo "E: must have 4 files for anatomy"
+        exit 1
+    fi
+
+	anatdirfull=$ofsubjdir/anatomy
+	$CMD mkdir -p $anatdirfull
+	i=0
+	#anats=(${task}_run001/scout001 highres004 scout005 highres008)
+	anats=(scout001 highres004 scout005 highres008)
+	for parrec in $origanatparrec; do
+		for ext in PAR REC; do
+			_cp $parrec.$ext $anatdirfull/${anats[$i]}.$ext
+		done
+		i=$((i+1))
+	done
+	# and niftis now
+	for i in 1 2; do
+		j=$(($i*2-1))
+		_cp $subjpath/anat0$i.nii.gz $anatdirfull/${anats[$j]}.nii.gz
+	done
+
+
     run=0
 	for parrec in $origboldparrec; do
         run=$(($run+1))
@@ -132,11 +164,11 @@ _cp /data/movies/raiders/dartmouth/preprocessed/MNI_mask_gray_large.nii.gz $ofmr
 _cp /home/swaroop/mvpa_linux_bkup/music/subjects/MNI152_3mm_AC.nii.gz $ofmridir/masks/BOLD/ac${prepcode}_mni.nii.gz
 
 # And now dump some hyperaligned data
-mkdir -p $ofmridir/aligned/BOLD
+mkdir -p $ofmridir/aligned/$task/BOLD
 for f in $topdir/preprocessed/*_8ch_*hdf5*; do 
     f_=$(basename $f)
     nf=$(echo $f_ | sed -e "s,^raiders_dartmouth_8ch_,bold_hyper${prepcode}_,g" -e "s,^surfslhypmappersmni_raiders_dartmouth_8ch_,bold_surfslhyper${prepcode}_,g");
-    _cp $f $ofmridir/aligned/BOLD/$nf
+    _cp $f $ofmridir/aligned/$task/BOLD/$nf
 done
 
 echo "DONE"
