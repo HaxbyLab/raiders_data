@@ -172,3 +172,6 @@ for f in $topdir/preprocessed/*_8ch_*hdf5*; do
 done
 
 echo "DONE"
+
+# did defacing manually for now
+# for im in sub*/anatomy/highres00[48].nii.gz; do scripts/mridefacer/mridefacer --apply-only $im &; sleep 1; done
