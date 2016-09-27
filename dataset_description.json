@@ -1,0 +1,14 @@
+{
+    "Name": "Dartmouth Raiders Dataset",
+    "BIDSVersion": None,
+    "License": "PDDL",
+    "Authors":  ["J. Swaroop Guntupalli",
+                 "Yaroslav O. Halchenko",
+                 "James V. Haxby"],
+    "Acknowledgements": "We thanks Courtney Rogers and Jason Gors for help with collecting the data, and Steven Spielberg and George Lucas for such a wonderful movie.",
+    "HowToAcknowledge": "Please cite Haxby et al.(2011). doi:10.1016/j.neuron.2011.08.026"
+    "Funding":  "Funding was provided by National Institutes of Mental Health grant 5R01MH075706 (Haxby), and by a graduate fellowship from the Neukom Institute for Computational Sciences at Dartmouth (Guntupalli)."
+    "ReferencesAndLinks":   ["doi:10.1016/j.neuron.2011.08.026"],
+    "DatasetDOI":    "" 
+
+}
